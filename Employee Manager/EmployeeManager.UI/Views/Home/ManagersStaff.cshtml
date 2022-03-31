@@ -1,0 +1,50 @@
+﻿@model EmployeeManager.UI.Models.EmployeeManagerViewModel
+
+@{
+    ViewData["Title"] = "Employee Manager";
+}
+
+<div class="text-center">
+    <h3 class="display-5">Employee Work and Vacation Status</h3>
+    <h4>Manager Employees</h4>
+    <div class="employee-grid">
+        @{
+            if(Model.WorkForce != null)
+            {
+                <div class="employee-grid-title">Employee Name</div>
+                <div class="employee-grid-title">Type</div>
+                <div class="employee-grid-title">Days Worked</div>
+                <div class="employee-grid-title">Vacation Days Taken</div>
+                <div class="employee-grid-title">Vacation Days Left</div>
+                <div class="employee-grid-title"></div>
+
+                foreach (var item in Model.WorkForce.ManagerEmployees.OrderBy(x => x.Last).ThenBy(x => x.First))
+                {
+                    <div class="employee-grid-cell">@item.Last, @item.First @(item.Middle ?? "")</div>
+                    <div class="employee-grid-cell">@item.EmployeeType</div>
+                    <div class="employee-grid-title text-success">@item.DaysWorked</div>
+                    <div class="employee-grid-title text-warning">@item.VacationDaysTaken</div>
+                    <div class="employee-grid-title text-primary">@(item.DaysOffPerYear - item.VacationDaysTaken)</div>
+                    <div class="employee-grid-cell">
+                        <div style="float:left;width:48%;margin:0;padding:0;">
+                            <form action="/Home/ManagersStaff" method="post">
+                                <input type="hidden" name="employeeId" value="@item.Id" />
+                                <input type="hidden" name="addDayWorked" value="true" />
+                                <input type="hidden" name="addDayOff" value="false" />
+                                <button value="Add Day Worked" class="btn-success"><span class=""></span>Add Day Worked</button>
+                            </form>
+                        </div>
+                        <div style="float:right;width:48%;margin:0;padding:0;">
+                            <form action="/Home/ManagersStaff" method="post">
+                                <input type="hidden" name="employeeId" value="@item.Id" />
+                                <input type="hidden" name="addDayWorked" value="false" />
+                                <input type="hidden" name="addDayOff" value="true" />
+                                <button value="Add Day Off" class="btn-warning">Add Day Off</button>
+                            </form>
+                        </div>
+                    </div>
+                }                
+            }
+        }
+    </div>    
+</div>
